@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .question {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 5px;
+            background-color: #f9f9f9;
+            cursor: move;
+            content: ;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div id="survey">
+        <div class="question" draggable="true">
+            <p>问题1: 你最喜欢的颜色是什么？</p>
+        </div>
+        <div class="question" draggable="true">
+            <p>问题2: 你的出生月份？</p>
+        </div>
+        <div class="question" draggable="true">
+            <p>问题3: 描述一下你的理想假期。</p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let dragged = null;
+
+            // 绑定拖动开始事件
+            document.querySelectorAll('.question').forEach(item => {
+                item.addEventListener('dragstart', function (e) {
+                    dragged = item;
+                    item.style.opacity = '0.5';
+                });
+
+                item.addEventListener('dragend', function (e) {
+                    item.style.opacity = '';
+                });
+            });
+
+            // 绑定放置目标的拖动经过事件
+            document.querySelectorAll('.question').forEach(item => {
+                item.addEventListener('dragover', function (e) {
+                    e.preventDefault();
+                });
+
+                item.addEventListener('dragenter', function (e) {
+                    e.target.style.background = '#f0f0f0';
+                });
+
+                item.addEventListener('dragleave', function (e) {
+                    e.target.style.background = '';
+                });
+
+                item.addEventListener('drop', function (e) {
+                    e.preventDefault();
+                    e.target.style.background = '';
+                    if (dragged !== item) {
+                        const after = determineDropAfter(e.clientY, item);
+                        if (after) {
+                            item.parentNode.insertBefore(dragged, item.nextSibling);
+                        } else {
+                            item.parentNode.insertBefore(dragged, item);
+                        }
+                    }
+                });
+            });
+
+            // Helper function to determine whether to insert before or after
+            function determineDropAfter(y, item) {
+                const rect = item.getBoundingClientRect();
+                return y > (rect.top + rect.height / 2);
+            }
+        });
+    </script>
+</body>
+
+</html>

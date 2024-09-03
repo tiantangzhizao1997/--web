@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>表格列显示/隐藏控制</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <!-- 复选框用于控制第一层表头的显示/隐藏 -->
+        <label><input type="checkbox" class="toggle-col" data-colspan="6" data-start="1" data-idth="1a" checked> 投资信息</label>
+        <label><input type="checkbox" class="toggle-col" data-colspan="3" data-start="7" data-idth="2a" checked> 项目信息</label>
+    </div>
+    
+    <table id="myTable">
+        <thead>
+            <tr class="header-row">
+                <th id="1a" colspan="6">投资信息</th>
+                <th id="2a" colspan="3">项目信息</th>
+            </tr>
+            <tr class="sub-header">
+                <th>列1</th><th>列2</th><th>列3</th><th>列4</th><th>列5</th><th>列6</th>
+                <th>列7</th><th>列8</th><th>列9</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>数据1</td><td>数据2</td><td>数据3</td><td>数据4</td><td>数据5</td><td>数据6</td>
+                <td>数据7</td><td>数据8</td><td>数据9</td>
+            </tr>
+            <tr>
+                <td>更多数据1</td><td>更多数据2</td><td>更多数据3</td><td>更多数据4</td><td>更多数据5</td><td>更多数据6</td>
+                <td>更多数据7</td><td>更多数据8</td><td>更多数据9</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function() {
+            $('.toggle-col').change(function() {
+                var colspan = parseInt($(this).data('colspan'), 10); // 获取该头部跨越的列数
+                var start = parseInt($(this).data('start'), 10); // 获取该头部起始列的索引
+                var idth = $(this).data('idth');
+                var isVisible = $(this).is(':checked'); // 复选框是否被选中
+        
+                // 首先切换第一层表头本身的显示状态
+                $('#' + idth).toggle(isVisible);
+        
+                // 然后切换所有相关列的显示状态
+                $('#myTable tr').each(function() {
+                    if($('th, td', this).slice(start-1 , start-1 + colspan).length != 2){
+                        $('th, td', this).slice(start-1 , start-1 + colspan).toggle(isVisible);
+                    }
+                    
+                });
+            });
+        });
+        </script>
+</body>
+</html>

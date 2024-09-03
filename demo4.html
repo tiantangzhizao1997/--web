@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .button {
+  --main-focus: #2d8cf0;
+  --font-color: #323232;
+  --bg-color-sub: #dedede;
+  --bg-color: #eee;
+  --main-color: #323232;
+  position: relative;
+  width: 150px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
+  background-color: var(--bg-color);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.button, .button__icon, .button__text {
+  transition: all 0.3s;
+}
+
+.button .button__text {
+  transform: translateX(30px);
+  color: var(--font-color);
+  font-weight: 600;
+}
+
+.button .button__icon {
+  position: absolute;
+  transform: translateX(109px);
+  height: 100%;
+  width: 39px;
+  background-color: var(--bg-color-sub);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button .svg {
+  width: 20px;
+  fill: var(--main-color);
+}
+
+.button:hover {
+  background: var(--bg-color);
+}
+
+.button:hover .button__text {
+  color: transparent;
+}
+
+.button:hover .button__icon {
+  width: 148px;
+  transform: translateX(0);
+}
+
+.button:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px var(--main-color);
+}
+
+         .warning-icon {
+             color: red; /* 图标颜色 */
+             background-color: white; /* 图标背景色 */
+             font-weight: bold; /* 加粗字体 */
+             padding: 0 5px; /* 左右填充 */
+             border-radius: 50%; /* 圆形背景 */
+             border: 1px solid red; /* 红色边框 */
+         }
+         .error__icon path {
+  fill: #EF665B;
+}
+    </style>
+    <script>
+      $(document).ready(function() {
+   $('#mySelect').select2({
+      placeholder: 'Select an option',
+      ajax: {
+         url: '后端URL', // 你的后端API URL
+         dataType: 'json',
+         delay: 250,
+         data: function (params) {
+            return {
+               searchTerm: params.term, // 搜索词
+               page: params.page || 1 // 分页
+            };
+         },
+         processResults: function (data, params) {
+            // 解析返回的数据结果
+            params.page = params.page || 1;
+
+            return {
+               results: data.items,
+               pagination: {
+                  more: (params.page * 30) < data.total_count // 是否有更多页
+               }
+            };
+         },
+         cache: true
+      },
+      minimumInputLength: 1, // 最小输入字符
+      templateResult: formatRepo, // 用于渲染结果的函数
+      templateSelection: formatRepoSelection // 选中结果的渲染函数
+   });
+});
+
+function formatRepo (repo) {
+   if (repo.loading) {
+      return repo.text;
+   }
+
+   var $container = $(
+      "<div class='select2-result-repository clearfix'>" +
+      "<div class='select2-result-repository__title'></div>" +
+      "</div>"
+   );
+
+   $container.find(".select2-result-repository__title").text(repo.name);
+
+   return $container;
+}
+
+function formatRepoSelection (repo) {
+   return repo.name || repo.text;
+}
+    </script>
+</head>
+<body>
+    <button type="button" class="button">
+        <span class="button__text">Refresh</span>
+        <span class="button__icon"><svg class="svg" height="48" viewBox="0 0 48 48" width="48" xmlns="http://www.w3.org/2000/svg"><path d="M35.3 12.7c-2.89-2.9-6.88-4.7-11.3-4.7-8.84 0-15.98 7.16-15.98 16s7.14 16 15.98 16c7.45 0 13.69-5.1 15.46-12h-4.16c-1.65 4.66-6.07 8-11.3 8-6.63 0-12-5.37-12-12s5.37-12 12-12c3.31 0 6.28 1.38 8.45 3.55l-6.45 6.45h14v-14l-4.7 4.7z"></path><path d="M0 0h48v48h-48z" fill="none"></path></svg></span>
+      </button>
+      <select id="mySelect" multiple="multiple"></select>
+      
+     <span class="warning-icon">&#x26A0;</span> <!-- 使用 Unicode '⚠' 警告符号 -->
+     <i class="fas fa-exclamation-circle"></i> 注意：该商品已在7天内售出20%，请注意库存，合理安排制造!
+      <div class="error__icon">
+          <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z" fill="#393a37"></path></svg>
+      </div>
+      <div class="error__close"><svg height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m15.8333 5.34166-1.175-1.175-4.6583 4.65834-4.65833-4.65834-1.175 1.175 4.65833 4.65834-4.65833 4.6583 1.175 1.175 4.65833-4.6583 4.6583 4.6583 1.175-1.175-4.6583-4.6583z" fill="#393a37"></path></svg></div>
+</body>
+</html>
