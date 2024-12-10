@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radio Button Group Example</title>
+<style>
+  .comment {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px; /* 根据需要调整 */
+}
+
+.comment:hover::after {
+    content: attr(data-comment);
+    position: absolute;
+    left: 100%; /* 让文本在元素右侧显示 */
+    white-space: nowrap;
+    background-color: #fff;
+    padding: 5px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    z-index: 100;
+    border: 1px solid #ccc; /* 可选，为悬浮窗添加边框 */
+    top: 0; /* 调整这个值以适应行的位置 */
+    width: auto; /* 或者指定宽度，如200px */
+    max-width: 300px; /* 可控制悬浮窗最大宽度 */
+}
+</style>
+<script>
+    $(document).ready(function() {
+    $('.comment').hover(function() {
+        // 当鼠标悬停时，设置tooltip内容
+        var fullText = $(this).attr('data-comment');
+        $(this).append('<span class="tooltip">' + fullText + '</span>');
+    }, function() {
+        // 当鼠标移开时，移除tooltip
+        $(this).find('.tooltip').remove();
+    });
+});
+</script>
+</head>
+<body>
+
+    <td class="comment" data-comment="这是一个很长的评论文本，需要完整显示时将鼠标悬停在这里。">
+        鼠标悬停查看评论
+    </td>
+    
+
+</body>
+</html>
